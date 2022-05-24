@@ -1,9 +1,10 @@
+import 'react-native-gesture-handler';
 import React from 'react';
 import type {Node} from 'react';
-import HomeScreen from './screens/HomeScreen';
+import Routes from './routes';
 
 const App: () => Node = () => {
-  return <HomeScreen />;
+  return <Routes />;
 };
 
 export default App;
