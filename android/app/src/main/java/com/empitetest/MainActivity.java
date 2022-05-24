@@ -1,4 +1,4 @@
-package com.empitetest;
+package com.alphabit.empitetest;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
