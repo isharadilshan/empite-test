@@ -1,38 +1,42 @@
 import React, {useState} from 'react';
+import auth from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
 import {StyleSheet, View} from 'react-native';
 import {TextInput as Input, useTheme} from 'react-native-paper';
 import Button from '../../components/atoms/Button';
 import TextInput from '../../components/atoms/TextInput';
 import KeyboardAvoidingWrapper from '../../components/wrappers/KeyBoardAvoidingWrapper';
-import {userNameValidator, passwordValidator} from '../../helper/Validator';
-// import {userSignIn} from '../../services/user';
+import {emailValidator, passwordValidator} from '../../helper/Validator';
+import {HOME} from '../../routes/route-paths';
 
 const LoginScreen = () => {
-  const [userName, setUserName] = useState({value: '', error: ''});
+  const [email, setEmail] = useState({value: '', error: ''});
   const [password, setPassword] = useState({value: '', error: ''});
   const navigation = useNavigation();
   const {colors} = useTheme();
 
   const onSubmit = async () => {
-    const userNameError = userNameValidator(userName.value);
+    const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
-    if (userNameError || passwordError) {
-      setUserName({value: userName.value, error: userNameError});
+    if (emailError || passwordError) {
+      setEmail({value: email.value, error: emailError});
       setPassword({value: password.value, error: passwordError});
       return;
     }
 
     try {
-      // const response = await userSignIn(userName.value, password.value);
-      // signIn(response, userName.value);
-      // navigation.navigate(HOME, {});
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        console.log('userNamePasswordMismatchMsg');
-      } else {
-        console.log('somethingWentWrong');
+      const response = await auth().signInWithEmailAndPassword(
+        email.value,
+        password.value,
+      );
+      if (response) {
+        navigation.navigate(HOME, {});
       }
+      console.log('RESPONSE ---------------------------', response);
+    } catch (error) {
+      console.log('ERROR ---------------------------', error);
+
+      console.log('some thing went wrong');
     }
   };
 
@@ -40,14 +44,14 @@ const LoginScreen = () => {
     <>
       <KeyboardAvoidingWrapper>
         <TextInput
-          label={'User Name'}
+          label={'Email'}
           returnKeyType="next"
-          value={userName.value}
-          onChangeText={text => setUserName({value: text, error: ''})}
-          error={!!userName.error}
-          errorText={userName.error}
+          value={email.value}
+          onChangeText={text => setEmail({value: text, error: ''})}
+          error={!!email.error}
+          errorText={email.error}
           autoCapitalize="none"
-          left={<Input.Icon name="account" color={colors.grey} />}
+          left={<Input.Icon name="email" color={colors.grey} />}
         />
         <TextInput
           label={'Password'}

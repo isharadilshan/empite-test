@@ -1,10 +1,8 @@
-import React, {useCallback, useEffect} from 'react';
-import auth from '@react-native-firebase/auth';
+import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Subheading} from 'react-native-paper';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import ScreenWrapper from '../../components/wrappers/ScreenWrapper';
-import {consumeApi} from '../../services/weather';
 import GoogleMapTab from './tabs/GoogleMapTab';
 import WeatherTab from './tabs/WeatherTab';
 
@@ -14,32 +12,6 @@ const HomeScreen = () => {
     {key: 'first', title: 'Weather Details'},
     {key: 'second', title: 'Near by Restaurents'},
   ]);
-
-  const consumeWeatherApi = useCallback(async () => {
-    try {
-      const response = await consumeApi();
-      console.log('response -------------------------------', response);
-    } catch (error) {
-      console.log('ERROR -------------------------------', error);
-    }
-  }, []);
-
-  useEffect(() => {
-    consumeWeatherApi();
-  }, [consumeWeatherApi]);
-
-  const login = (email, password) => {
-    try {
-      auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(res => {
-          console.log('RES_-------------------------------', res);
-          console.log(res.user.email);
-        });
-    } catch (error) {
-      console.log(error.toString(error));
-    }
-  };
 
   const renderScene = SceneMap({
     first: WeatherTab,

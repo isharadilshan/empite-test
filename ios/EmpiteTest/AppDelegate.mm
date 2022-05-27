@@ -6,6 +6,7 @@
 
 #import <React/RCTAppSetupUtils.h>
 #import <Firebase.h>
+#import <GoogleMaps/GoogleMaps.h>
 
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
@@ -35,6 +36,8 @@
   }
 
   RCTAppSetupPrepareApp(application);
+
+  [GMSServices provideAPIKey:@"AIzaSyAeHIC4IG7XKT2Ls5Ti_YZV-6DHQk6dVHE"];
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
 
