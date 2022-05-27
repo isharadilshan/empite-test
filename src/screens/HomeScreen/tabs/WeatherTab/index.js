@@ -1,23 +1,36 @@
-import React, {useCallback, useEffect} from 'react';
-import {View, Text} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {FlatList, View} from 'react-native';
+import WeatherCard from '../../../../components/organisms/WeatherCard';
 import {getWeather16Days} from '../../../../services/weather';
 
-const WeatherTab = () => {
+const WeatherTab = ({currenCordinates}) => {
+  const [weatherList, setWeatherList] = useState([]);
+
   const fetchWeatherDetails = useCallback(async () => {
     try {
-      const response = await getWeather16Days();
-      console.log('Response ------------------------------------', response);
+      const response = await getWeather16Days(
+        currenCordinates?.latitude,
+        currenCordinates?.latitude,
+      );
+      setWeatherList(response?.data.daily);
     } catch (error) {
-      console.log('ERROR -----------------------------', error);
+      console.log(error);
     }
-  }, []);
+  }, [currenCordinates]);
 
   useEffect(() => {
     fetchWeatherDetails();
   }, [fetchWeatherDetails]);
+
+  const renderItem = ({item}) => <WeatherCard detail={item} />;
+
   return (
     <View>
-      <Text>this is my weather tab</Text>
+      <FlatList
+        data={weatherList}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+      />
     </View>
   );
 };

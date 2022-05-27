@@ -35,6 +35,10 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Empite Test app use your geo location for proper functioning</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Empite Test app use your geo location for proper functioning</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Empite Test app use your geo location for proper functioning</string>
 	<key>UILaunchStoryboardName</key>
