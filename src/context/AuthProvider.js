@@ -18,6 +18,13 @@ const AuthProvider = ({children}) => {
             console.log(e);
           }
         },
+        loginWithCredentials: async credentials => {
+          try {
+            await auth().signInWithCredential(credentials);
+          } catch (e) {
+            console.log(e);
+          }
+        },
         register: async (email, password) => {
           try {
             await auth().createUserWithEmailAndPassword(email, password);

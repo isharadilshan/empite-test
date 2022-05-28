@@ -1,7 +1,10 @@
 import React, {useContext, useState} from 'react';
+import auth from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
 import {StyleSheet, View, Text} from 'react-native';
+import {LoginButton, LoginManager, AccessToken} from 'react-native-fbsdk-next';
 import {TextInput as Input, useTheme} from 'react-native-paper';
+import Toast from 'react-native-toast-message';
 import Button from '../../components/atoms/Button';
 import TextInput from '../../components/atoms/TextInput';
 import KeyboardAvoidingWrapper from '../../components/wrappers/KeyBoardAvoidingWrapper';
@@ -11,7 +14,7 @@ import {emailValidator, passwordValidator} from '../../helper/Validator';
 const LoginScreen = () => {
   const [email, setEmail] = useState({value: '', error: ''});
   const [password, setPassword] = useState({value: '', error: ''});
-  const {login} = useContext(AuthContext);
+  const {login, loginWithCredentials} = useContext(AuthContext);
   const {colors} = useTheme();
   const navigation = useNavigation();
 
@@ -24,6 +27,41 @@ const LoginScreen = () => {
       return;
     }
     login(email.value, password.value);
+  };
+
+  const onPressLoginWithFacebook = async () => {
+    try {
+      const result = await LoginManager.logInWithPermissions([
+        'public_profile',
+        'email',
+      ]);
+      if (result.isCancelled) {
+        Toast.show({
+          type: 'error',
+          position: 'bottom',
+          text1: 'User deneid login process',
+        });
+        return;
+      }
+      const data = await AccessToken.getCurrentAccessToken();
+
+      if (!data) {
+        Toast.show({
+          type: 'error',
+          position: 'bottom',
+          text1: 'Something went wrong obtaining access token',
+        });
+        return;
+      }
+
+      const facebookCredential = auth.FacebookAuthProvider.credential(
+        data.accessToken,
+      );
+
+      loginWithCredentials(facebookCredential);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -65,6 +103,7 @@ const LoginScreen = () => {
             {'Login'}
           </Button>
         </View>
+        <LoginButton onPress={onPressLoginWithFacebook} />
       </KeyboardAvoidingWrapper>
     </>
   );
