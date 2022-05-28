@@ -1,50 +1,145 @@
 import React, {useCallback, useEffect} from 'react';
-import auth from '@react-native-firebase/auth';
-import {StyleSheet} from 'react-native';
+import {
+  Alert,
+  Linking,
+  PermissionsAndroid,
+  Platform,
+  StyleSheet,
+} from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
 import {Subheading} from 'react-native-paper';
-import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
+import {TabView, TabBar} from 'react-native-tab-view';
+import Toast from 'react-native-toast-message';
 import ScreenWrapper from '../../components/wrappers/ScreenWrapper';
-import {consumeApi} from '../../services/weather';
 import GoogleMapTab from './tabs/GoogleMapTab';
 import WeatherTab from './tabs/WeatherTab';
 
 const HomeScreen = () => {
   const [index, setIndex] = React.useState(0);
+  const [currenCordinates, setCurrentCordinates] = React.useState({});
   const [routes] = React.useState([
     {key: 'first', title: 'Weather Details'},
     {key: 'second', title: 'Near by Restaurents'},
   ]);
 
-  const consumeWeatherApi = useCallback(async () => {
-    try {
-      const response = await consumeApi();
-      console.log('response -------------------------------', response);
-    } catch (error) {
-      console.log('ERROR -------------------------------', error);
-    }
-  }, []);
+  const hasPermissionIOS = async () => {
+    const openSetting = () => {
+      Linking.openSettings().catch(() => {
+        Alert.alert('Unable to open settings');
+      });
+    };
+    const status = await Geolocation.requestAuthorization('whenInUse');
 
-  useEffect(() => {
-    consumeWeatherApi();
-  }, [consumeWeatherApi]);
-
-  const login = (email, password) => {
-    try {
-      auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(res => {
-          console.log('RES_-------------------------------', res);
-          console.log(res.user.email);
-        });
-    } catch (error) {
-      console.log(error.toString(error));
+    if (status === 'granted') {
+      return true;
     }
+
+    if (status === 'denied') {
+      Alert.alert('Location permission denied');
+    }
+
+    if (status === 'disabled') {
+      Alert.alert(
+        'Turn on Location Services to allow EmpiteTest to determine your location.',
+        '',
+        [
+          {text: 'Go to Settings', onPress: openSetting},
+          {text: "Don't Use Location", onPress: () => {}},
+        ],
+      );
+    }
+
+    return false;
   };
 
-  const renderScene = SceneMap({
-    first: WeatherTab,
-    second: GoogleMapTab,
-  });
+  const hasLocationPermission = useCallback(async () => {
+    if (Platform.OS === 'ios') {
+      const hasPermission = await hasPermissionIOS();
+      return hasPermission;
+    }
+
+    if (Platform.OS === 'android' && Platform.Version < 23) {
+      return true;
+    }
+
+    const hasPermission = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+
+    if (hasPermission) {
+      return true;
+    }
+
+    const status = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+
+    if (status === PermissionsAndroid.RESULTS.GRANTED) {
+      return true;
+    }
+
+    if (status === PermissionsAndroid.RESULTS.DENIED) {
+      Toast.show({
+        type: 'error',
+        position: 'bottom',
+        text1: 'Location permission denied by user.',
+      });
+    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+      Toast.show({
+        type: 'error',
+        position: 'bottom',
+        text1: 'Location permission revoked by user.',
+      });
+    }
+
+    return false;
+  }, []);
+
+  const getCurrentLocation = useCallback(async () => {
+    const hasPermission = await hasLocationPermission();
+
+    if (!hasPermission) {
+      return;
+    }
+
+    Geolocation.getCurrentPosition(
+      position => {
+        setCurrentCordinates(position?.coords);
+      },
+      error => {
+        Alert.alert(`Code ${error.code}`, error.message);
+        console.log(error);
+      },
+      {
+        accuracy: {
+          android: 'high',
+          ios: 'best',
+        },
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 10000,
+        distanceFilter: 0,
+        forceRequestLocation: true,
+        forceLocationManager: true,
+        showLocationDialog: true,
+      },
+    );
+  }, [hasLocationPermission]);
+
+  useEffect(() => {
+    getCurrentLocation();
+  }, [getCurrentLocation]);
+
+  const renderScene = ({route}) => {
+    switch (route.key) {
+      case 'first':
+        return <WeatherTab currenCordinates={currenCordinates} />;
+      case 'second':
+        return <GoogleMapTab currenCordinates={currenCordinates} />;
+      default:
+        return null;
+    }
+  };
 
   const renderTabBar = props => (
     <TabBar

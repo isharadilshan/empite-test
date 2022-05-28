@@ -1,19 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {KeyboardAvoidingView, Platform, StyleSheet} from 'react-native';
+import {
+  ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+} from 'react-native';
 
 const KeyboardAvoidingWrapper = ({children}) => {
   return (
-    // <ImageBackground
-    //   source={require('../../../assets/background/abstract.png')}
-    //   resizeMode="cover"
-    //   style={styles.background}>
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : null}>
-      {children}
-    </KeyboardAvoidingView>
-    // </ImageBackground>
+    <ImageBackground
+      source={require('../../../assets/background/abstract.png')}
+      resizeMode="cover"
+      style={styles.background}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}>
+        {children}
+      </KeyboardAvoidingView>
+    </ImageBackground>
   );
 };
 

@@ -7,7 +7,6 @@ const ScreenWrapper = ({children, noPaddings}) => {
     <View
       style={{
         flex: 1,
-        paddingVertical: 16,
       }}>
       {children}
     </View>
