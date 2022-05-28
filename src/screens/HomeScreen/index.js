@@ -5,11 +5,11 @@ import {
   PermissionsAndroid,
   Platform,
   StyleSheet,
-  ToastAndroid,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {Subheading} from 'react-native-paper';
 import {TabView, TabBar} from 'react-native-tab-view';
+import Toast from 'react-native-toast-message';
 import ScreenWrapper from '../../components/wrappers/ScreenWrapper';
 import GoogleMapTab from './tabs/GoogleMapTab';
 import WeatherTab from './tabs/WeatherTab';
@@ -79,15 +79,17 @@ const HomeScreen = () => {
     }
 
     if (status === PermissionsAndroid.RESULTS.DENIED) {
-      ToastAndroid.show(
-        'Location permission denied by user.',
-        ToastAndroid.LONG,
-      );
+      Toast.show({
+        type: 'error',
+        position: 'bottom',
+        text1: 'Location permission denied by user.',
+      });
     } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-      ToastAndroid.show(
-        'Location permission revoked by user.',
-        ToastAndroid.LONG,
-      );
+      Toast.show({
+        type: 'error',
+        position: 'bottom',
+        text1: 'Location permission revoked by user.',
+      });
     }
 
     return false;

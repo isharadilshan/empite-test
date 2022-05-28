@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {TextInput as Input, useTheme} from 'react-native-paper';
 import Button from '../../components/atoms/Button';
 import TextInput from '../../components/atoms/TextInput';
@@ -8,12 +8,12 @@ import KeyboardAvoidingWrapper from '../../components/wrappers/KeyBoardAvoidingW
 import {AuthContext} from '../../context/AuthProvider';
 import {emailValidator, passwordValidator} from '../../helper/Validator';
 
-const LoginScreen = () => {
+const SignupScreen = () => {
   const [email, setEmail] = useState({value: '', error: ''});
   const [password, setPassword] = useState({value: '', error: ''});
-  const {login} = useContext(AuthContext);
-  const {colors} = useTheme();
+  const {register} = useContext(AuthContext);
   const navigation = useNavigation();
+  const {colors} = useTheme();
 
   const onSubmit = async () => {
     const emailError = emailValidator(email.value);
@@ -23,7 +23,7 @@ const LoginScreen = () => {
       setPassword({value: password.value, error: passwordError});
       return;
     }
-    login(email.value, password.value);
+    register(email.value, password.value);
   };
 
   return (
@@ -51,8 +51,8 @@ const LoginScreen = () => {
         />
         <Text
           style={[styles.textNoAccount, {color: colors.matBlue}]}
-          onPress={() => navigation.navigate('SIGNUP', {})}>
-          Don't have an account ?
+          onPress={() => navigation.navigate('LOGIN', {})}>
+          Already have an account ?
         </Text>
         <View style={styles.buttonWrapper}>
           <Button
@@ -62,7 +62,7 @@ const LoginScreen = () => {
               {backgroundColor: colors.matGreen},
             ]}
             onPress={onSubmit}>
-            {'Login'}
+            {'Sign Up'}
           </Button>
         </View>
       </KeyboardAvoidingWrapper>
@@ -89,4 +89,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default SignupScreen;

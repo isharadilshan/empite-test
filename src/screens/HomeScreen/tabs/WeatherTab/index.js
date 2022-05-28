@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
+import PropTypes from 'prop-types';
 import {FlatList, View} from 'react-native';
 import WeatherCard from '../../../../components/organisms/WeatherCard';
 import {getWeather16Days} from '../../../../services/weather';
@@ -10,9 +11,9 @@ const WeatherTab = ({currenCordinates}) => {
     try {
       const response = await getWeather16Days(
         currenCordinates?.latitude,
-        currenCordinates?.latitude,
+        currenCordinates?.longitude,
       );
-      setWeatherList(response?.data.daily);
+      setWeatherList(response?.data?.daily || []);
     } catch (error) {
       console.log(error);
     }
@@ -33,6 +34,10 @@ const WeatherTab = ({currenCordinates}) => {
       />
     </View>
   );
+};
+
+WeatherTab.propTypes = {
+  currenCordinates: PropTypes.object,
 };
 
 export default WeatherTab;

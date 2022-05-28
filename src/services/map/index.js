@@ -1,6 +1,6 @@
 import {GET_NEARBY_RESTAURENTS} from '../endpoints';
-import {RestClient} from '../rest-client';
+import {RestClient2} from '../rest-client';
 
 export const getNearByRestaurents = () => {
-  return RestClient.get(GET_NEARBY_RESTAURENTS);
+  return RestClient2.get(GET_NEARBY_RESTAURENTS);
 };

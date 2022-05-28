@@ -7,10 +7,6 @@ export const consumeApi = () => {
   );
 };
 
-export const getWeather16Days = (
-  lat = '6.203488',
-  lon = '81.109853',
-  days = '16',
-) => {
+export const getWeather16Days = (lat, lon, days = '16') => {
   return RestClient.get(GET_WEATHER_16_DAYS(lat, lon, days));
 };

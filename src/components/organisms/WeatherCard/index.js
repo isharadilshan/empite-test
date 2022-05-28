@@ -5,7 +5,6 @@ import {useTheme, IconButton} from 'react-native-paper';
 
 const WeatherCard = ({detail}) => {
   const {colors} = useTheme();
-  console.log('ITEM -----------------------------', detail);
   return (
     <View style={[styles.cardWrapper, {backgroundColor: colors.matBlue}]}>
       <View style={styles.textRowWrapper}>

@@ -11,12 +11,10 @@ const Colors = {
   darkBlueGrey: '#141E30',
   pink: '#E91E63',
   ash: '#3f4c6b',
-  red: '#ff3333',
+  red: '#C70039',
   warnText: '#f6b831',
   green: '#12834a',
   matGreen: '#00695C',
-
-  darkGradient: ['#141E30', '#141E30'],
 };
 
 export default Colors;
