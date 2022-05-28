@@ -1,13 +1,13 @@
 const axios = require('axios');
 
 // this will be moved to config in future
-const url = 'https://openweathermap.org';
+const url = 'api.openweathermap.org/data/2.5';
 
-export const Axios = axios.create({baseURL: url});
+export const RestClient = axios.create({baseURL: url});
 
 /**
   request interceptor
  */
-Axios.interceptors.request.use(config => {
+RestClient.interceptors.request.use(config => {
   return config;
 });

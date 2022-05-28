@@ -1,6 +1,14 @@
-import {CONSUME_API} from '../endpoints';
-import {Axios} from '../rest-client';
+import {CONSUME_API, GET_WEATHER_16_DAYS} from '../endpoints';
+import {RestClient} from '../rest-client';
 
 export const consumeApi = () => {
-  return Axios.get(CONSUME_API);
+  return RestClient.get(CONSUME_API);
+};
+
+export const getWeather16Days = (
+  lat = '6.203488',
+  lon = '81.109853',
+  days = '16',
+) => {
+  return RestClient.get(GET_WEATHER_16_DAYS(lat, lon, days));
 };
