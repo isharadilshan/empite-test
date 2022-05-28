@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">EmpiteTest</string>
+    <string name="facebook_app_id">585398395331615</string>
+    <string name="facebook_client_token">8048257cd7a96b8d4c635d30d2ee7eec</string>
 </resources>

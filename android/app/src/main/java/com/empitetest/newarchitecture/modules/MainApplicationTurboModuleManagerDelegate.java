@@ -1,4 +1,4 @@
-package com.empitetest.newarchitecture.modules;
+package com.alphabit.empitetest.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;
